@@ -1,14 +1,23 @@
+"use client"
+
 import Swal, { SweetAlertIcon } from "sweetalert2";
 import { colors } from "../../constants/colors";
 import { IDialog } from "../../interfaces/IDialog";
 
 export function throwCustomDialog(dialog: IDialog) {
-  const { type, title, message, confirmMessage, color } = dialog;
+  const {
+    type,
+    title,
+    message,
+    confirmMessage,
+    cancelMessage,
+    color,
+    onConfirmMessage
+  } = dialog;
 
   const baseConfig = {
-    title: `<span style="font-family: Poppins, sans-serif;">${title}</span>`,
-    html: `<span style="font-family: Poppins, sans-serif;">${message}</span>`,
-    confirmButtonText: confirmMessage || "OK",
+    title: `${title}`,
+    html: `${message}`,
     confirmButtonColor: color || colors.first,
     allowOutsideClick: false,
     allowEscapeKey: false,
@@ -18,15 +27,12 @@ export function throwCustomDialog(dialog: IDialog) {
     case "loading":
       Swal.fire({
         ...baseConfig,
-        title: `<span style="font-family: Poppins, sans-serif;">${title || "Carregando..."}</span>`,
+        title: `${title || "Carregando..."}`,
         html: `<div style="display:flex;justify-content:center;align-items:center;flex-direction:column;gap:10px;">
-                 <span style="font-family: Poppins, sans-serif;">${message || "Aguarde um instante"}</span>
-               </div>
-               `,
+                 ${message || "Aguarde um instante"}
+               </div>`,
         showConfirmButton: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
+        didOpen: () => Swal.showLoading(),
       });
       break;
 
@@ -34,6 +40,7 @@ export function throwCustomDialog(dialog: IDialog) {
       Swal.fire({
         ...baseConfig,
         icon: "success",
+        confirmButtonText: confirmMessage || "OK",
         timer: 2000,
         timerProgressBar: true,
       });
@@ -43,6 +50,7 @@ export function throwCustomDialog(dialog: IDialog) {
       Swal.fire({
         ...baseConfig,
         icon: "warning",
+        confirmButtonText: confirmMessage || "OK",
       });
       break;
 
@@ -50,13 +58,37 @@ export function throwCustomDialog(dialog: IDialog) {
       Swal.fire({
         ...baseConfig,
         icon: "error",
+        confirmButtonText: confirmMessage || "OK",
       });
       break;
+
+    case "confirm":
+      return Swal.fire({
+        ...baseConfig,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: confirmMessage || "Sim",
+        cancelButtonText: cancelMessage || "Cancelar",
+        cancelButtonColor: "#aaa",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Sucesso',
+            html: onConfirmMessage,
+            icon: "success",
+            confirmButtonColor: colors.first
+          })
+        }
+
+        return result;
+      })
 
     default:
       Swal.fire({
         ...baseConfig,
         icon: (type as SweetAlertIcon) || "info",
+        confirmButtonText: confirmMessage || "OK",
       });
       break;
   }

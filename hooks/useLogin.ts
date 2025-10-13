@@ -1,12 +1,8 @@
-"use client";
-
 import { useState, FormEvent } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { throwCustomDialog } from "../components/ui/dialog";
-import { putStorage } from "../functions/storage/putLocalStorage";
-import { extractUnidadeFromDn } from "../functions/auth/extractUnidade";
-import { normalizeUnidade } from "../functions/auth/normalizeUnidade"; 
 import { colors } from "../constants/colors";
+import { clearStorage } from "../functions/storage/clearLocalStorage";
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
@@ -42,11 +38,6 @@ export function useLogin() {
   }
 
   async function handleSuccessfulLogin() {
-    const session = await getSession();
-    const dn = (session?.user && "dn" in session.user && session.user.dn) || "";
-    const unidade = normalizeUnidade(extractUnidadeFromDn(dn));
-
-    putStorage("unidade", unidade);
     window.location.replace("/dashboard/");
   }
 
@@ -70,5 +61,11 @@ export function useLogin() {
     });
   }
 
-  return { loading, handleSubmit };
+  async function logout() {
+    clearStorage();
+
+    await signOut({ callbackUrl: "/login" });
+  }
+
+  return { loading, handleSubmit, logout };
 }

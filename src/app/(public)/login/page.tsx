@@ -25,9 +25,9 @@ export default function Login() {
         }}
       >
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "rgba(0, 0, 0, 0.49)" }} />
-        <Box sx={{ position: "relative", zIndex: 2 }}>
-          <CopyrightCopasul />
-        </Box>
+          <Box sx={{ position: "relative", zIndex: 2 }}>
+            <CopyrightCopasul />
+          </Box>
       </Grid>
 
         {loading ? (

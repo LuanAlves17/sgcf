@@ -1,22 +1,20 @@
-"use client"
-
-import { useEffect, useState } from "react";
+"use client";
 
 import Header from "../../../../components/header";
-import { getLocalStorageByKey } from "../../../../functions/storage/getLocalStorage";
+import { CircularProgress, Grid } from "@mui/material";
+import { useUnidade } from "../../../../hooks/useUnidade";
+import TruckList from "../../../../components/truck-list";
 
 export default function Dashboard() {
-    const [unidade, setUnidade] = useState<string>();
-    
-    useEffect(() => {
-        const unidadeEncontrada: string | null = getLocalStorageByKey<string>("unidade");
-    
-        if(unidadeEncontrada) setUnidade(unidadeEncontrada)
-    }, []);
+  const { unidade } = useUnidade();
 
-    return (
-        <>
-            <Header organizationName={unidade}/>
-        </>
-    )
+  const unidadefake = "007-AEROPORTO"
+
+  return (
+    <>
+      <Header />
+
+      <TruckList unidade={unidadefake} />
+    </>
+  );
 }

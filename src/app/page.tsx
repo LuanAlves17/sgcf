@@ -1,9 +1,11 @@
 "use client"
 
+import { useRouter } from "next/navigation";
+
+
+
 export default function Home() {
-  return (
-    <>
-      Home Raiz      
-    </>
-  );
+  const navigation = useRouter();
+
+  return navigation.push("/dashboard");
 }

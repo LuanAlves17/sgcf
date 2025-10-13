@@ -1,14 +1,21 @@
 "use client"
 
-import { Box,  Grid } from "@mui/material"
-import Image from "next/image"
+import { useState } from "react"
 
-import React, { useEffect, useState } from "react"
+import { Box, Button, Drawer, Grid, useMediaQuery  } from "@mui/material"
+import MenuIcon from '@mui/icons-material/Menu';
+
+import DrawerMenu from "./ui/drawer"
 import TimeLocal from "./ui/time-local"
 import OrganizationDetected from "./ui/organization-detected"
+
+import Image from "next/image"
 import { colors } from "../constants/colors"
-import { getLocalStorageByKey } from "../functions/storage/getLocalStorage"
-import { IOrganization } from "../interfaces/IOrganization"
+
+
+import { useUnidade } from "../hooks/useUnidade"
+import { useLogin } from "../hooks/useLogin"
+
 
 const styles = {
     container: {
@@ -32,22 +39,51 @@ const styles = {
         width: '1.5px',
         height: 20,
         background: colors.second
+    },
+    items: {
+        display: 'flex',
+        gap: 1,
+        alignItems: 'center'
     }
 }
 
-export default function Header(props: IOrganization) {
+
+export default function Header() {
+    const { unidade } = useUnidade();
+    const { logout } = useLogin();
+
+    const isResponsive = useMediaQuery('(max-width: 570px)');
+    const [open, setOpen] = useState(false);
+
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen);
+    };
+
     return (
         <Grid container sx={styles.container}>
-            { props.organizationName ? <OrganizationDetected organizationName={props.organizationName} /> : null}
+            { unidade ? <OrganizationDetected organizationName={unidade} /> : null}
 
             <Grid container sx={styles.header} px={5} py={1}>
-                <Box sx={styles.imagesBox}>
+                <Box sx={styles.imagesBox} component={"a"} href="/">
                     <Image src='/assets/svg/Logo.svg' alt="Logo do qMonitor" width={170} height={45} />
-                    <Box sx={styles.split}></Box>
-                    <Image src='/assets/png/LogoCopasul.png' alt="Logo da Copasul" width={130} height={40}/>
+                    {
+                        !isResponsive && (
+                            <>
+                                <Box sx={styles.split}></Box>
+                                <Image src='/assets/png/LogoCopasul.png' alt="Logo da Copasul" width={130} height={40}/>   
+                            </>
+                        )
+                    }
                 </Box>
                 
-                <TimeLocal/>
+                <Box sx={styles.items}>
+                    { !isResponsive && <TimeLocal/> }
+                    <Button onClick={toggleDrawer(true)} sx={{color: colors.white, background: colors.first, borderRadius: 50}}><MenuIcon/></Button>
+
+                    <Drawer open={open} onClose={toggleDrawer(false)}>
+                        <DrawerMenu onClose={toggleDrawer(false)} onLogout={logout} user={"Luan"} />
+                    </Drawer>
+                </Box>
 
             </Grid>
         </Grid>

@@ -4,3 +4,10 @@
   box-sizing: border-box;
   font-family: 'sans-serif';
 }
+
+.swal2-title,
+.swal2-html-container,
+.swal2-confirm,
+.swal2-cancel {
+  font-family: 'Poppins', sans-serif !important;
+}
