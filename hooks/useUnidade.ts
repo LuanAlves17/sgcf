@@ -1,47 +1,37 @@
-import { useEffect, useState } from "react";
+"use client"
+
+import { useEffect, useState, useCallback } from "react";
 import { getSession } from "next-auth/react";
 import { extractUnidadeFromDn } from "../functions/auth/extractUnidade";
 import { normalizeUnidade } from "../functions/auth/normalizeUnidade";
 
-interface UseUnidadeReturn {
-  unidade: string;
-  loading: boolean;
-  error: string | null;
-}
-
-export function useUnidade(): UseUnidadeReturn {
-  const [unidade, setUnidade] = useState<string >('');
+export function useUnidade() {
+  const [unidade, setUnidade] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const session = await getSession();
+  const fetchUnidade = useCallback(async () => {
+    setLoading(true);
+    try {
+      const session = await getSession();
+      if (!session?.user?.dn) throw new Error("Sessão inválida ou sem DN do AD.");
 
-        if (!session?.user || !("dn" in session.user)) {
-          setError("Sessão inválida ou sem DN do AD.");
-          return;
-        }
+      const unidadeExtraida = extractUnidadeFromDn(session.user.dn);
+      const unidadeNormalizada = normalizeUnidade(unidadeExtraida);
 
-        const dn = (session.user as any).dn || "";
-        const unidadeExtraida = extractUnidadeFromDn(dn);
-        const unidadeNormalizada = normalizeUnidade(unidadeExtraida);
-
-        if (!unidadeNormalizada) {
-          setError("Unidade não pôde ser identificada.");
-          return;
-        }
-
-        setUnidade(unidadeNormalizada);
-      } catch (err) {
-        console.error("Erro ao buscar unidade:", err);
-        setError("Erro ao buscar unidade do usuário.");
-      } finally {
-        setLoading(false);
-      }
-    })();
+      if (!unidadeNormalizada) throw new Error("Unidade não pôde ser identificada.");
+      setUnidade(unidadeNormalizada);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Erro ao buscar unidade do usuário.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchUnidade();
+  }, [fetchUnidade]);
 
   return { unidade, loading, error };
 }

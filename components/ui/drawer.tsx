@@ -12,12 +12,12 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { items } from "../../constants/menu-items";
-
 import Image from "next/image";
 import { Avatar, Tooltip } from "@mui/material";
+import { MenuItems } from "../../constants/menu-items";
 
 export default function DrawerMenu({ onClose, onLogout, user }: { onClose: () => void; onLogout: () => void, user: string | null}) {
+    const items = MenuItems();
     const inicial: string | null = user ? user[0] : null;
     
     return (

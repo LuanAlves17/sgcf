@@ -19,6 +19,13 @@ export async function middleware(req) {
     return NextResponse.redirect(dashboardUrl);
   }
 
+  if (pathname === "/") {
+    const dashboardUrl = req.nextUrl.clone();
+    dashboardUrl.pathname = "/dashboard";
+    dashboardUrl.search = "";
+    return NextResponse.redirect(dashboardUrl);
+  }
+
   
   return NextResponse.next();
 }

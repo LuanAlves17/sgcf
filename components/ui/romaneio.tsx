@@ -56,7 +56,7 @@ export default function RomaneioCard({ romaneio, selected, onSelect }: RomaneioP
           </Grid>
           <Grid size={{ xs: 6 }}>
             <Typography variant="body2" color="text.secondary">Motorista</Typography>
-            <Typography variant="body2" fontWeight={600}>{romaneio.nm_motorista.toUpperCase()}</Typography>
+            <Typography variant="body2" fontWeight={600}>{(romaneio.nm_motorista || "").toUpperCase()}</Typography>
           </Grid>
         </Grid>
       </Box>

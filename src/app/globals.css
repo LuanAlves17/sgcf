@@ -5,9 +5,7 @@
   font-family: 'sans-serif';
 }
 
-.swal2-title,
-.swal2-html-container,
-.swal2-confirm,
-.swal2-cancel {
+
+.swal2-popup * {
   font-family: 'Poppins', sans-serif !important;
 }

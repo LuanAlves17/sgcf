@@ -2,7 +2,7 @@
 import { Box, IconButton, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IFila } from "../../interfaces/IParametro"; 
+import { IFila } from "../../interfaces/IFila"; 
 
 interface FilaListProps {
   filas: IFila[];

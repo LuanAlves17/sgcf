@@ -64,7 +64,7 @@ export default function Header() {
             { unidade ? <OrganizationDetected organizationName={unidade} /> : null}
 
             <Grid container sx={styles.header} px={5} py={1}>
-                <Box sx={styles.imagesBox} component={"a"} href="/">
+                <Box sx={styles.imagesBox} component={"a"} href="/dashboard">
                     <Image src='/assets/svg/Logo.svg' alt="Logo do qMonitor" width={170} height={45} />
                     {
                         !isResponsive && (

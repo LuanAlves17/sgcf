@@ -8,14 +8,14 @@ const styles = {
   boxTimeLocal: {
     padding: "7px 15px",
     border: `2px solid ${colors.first}`,
-    color: colors.first,
     borderRadius: 1,
     userSelect: "none",
     fontFamily: "sans-serif",
+    color: colors.first
   },
 };
 
-export default function TimeLocal() {
+export default function TimeLocal(props: any) {
   const [time, setTime] = useState<string>("");
 
   useEffect(() => {
